@@ -123,7 +123,7 @@ public class CommandItems {
 
             if (displayLoreMap.containsKey(displayName)) {
                 String formattedCommand = command.replace("{player}", player.getName());
-                player.performCommand(formattedCommand);
+                plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), formattedCommand);
                 String redeemMessage = spawnerConfig.getRedeemMessageFromDisplayName(displayName);
 
                 if (redeemMessage != null && !redeemMessage.isEmpty()) {
