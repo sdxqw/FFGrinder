@@ -1,5 +1,6 @@
 package io.github.sdxqw.ffgrinder.config;
 
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -40,4 +41,31 @@ public class SpawnerConfig {
         }
         return null;
     }
+
+    public String getRedeemMessageFromDisplayName(String displayName) {
+        ConfigurationSection configurationSection = config;
+
+        for (String entityTypeName : configurationSection.getKeys(false)) {
+            ConfigurationSection section = configurationSection.getConfigurationSection(entityTypeName);
+
+            if (section != null && section.contains("commandWithChances")) {
+                List<Map<?, ?>> commandWithChances = section.getMapList("commandWithChances");
+                for (Map<?, ?> commandMap : commandWithChances) {
+                    String commandSection = (String) commandMap.get("redeemMessage");
+
+                    if (commandSection == null) {
+                        continue;
+                    }
+
+                    if (displayName.equals(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', (String) commandMap.get("displayName"))))) {
+                        return ChatColor.translateAlternateColorCodes('&', commandSection);
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
+
 }

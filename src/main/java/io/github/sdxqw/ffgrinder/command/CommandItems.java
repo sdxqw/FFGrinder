@@ -1,13 +1,17 @@
 package io.github.sdxqw.ffgrinder.command;
 
 import io.github.sdxqw.ffgrinder.FFGrinder;
+import io.github.sdxqw.ffgrinder.config.SpawnerConfig;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class CommandItems {
@@ -15,9 +19,11 @@ public class CommandItems {
     private final Map<String, Map<String, List<String>>> commandItems;
 
     private final FFGrinder plugin;
+    private final SpawnerConfig spawnerConfig;
 
-    public CommandItems(FFGrinder plugin) {
+    public CommandItems(FFGrinder plugin, SpawnerConfig spawnerConfig) {
         this.plugin = plugin;
+        this.spawnerConfig = spawnerConfig;
         this.commandItems = new HashMap<>();
     }
 
@@ -48,11 +54,14 @@ public class CommandItems {
                 Map<String, List<String>> displayLoreName = new HashMap<>();
 
                 displayLoreName.put(displayName, lore);
-                commandItems.put(command, displayLoreName);
+
+                if (commandItems.containsKey(command)) {
+                    commandItems.get(command).put(displayName, lore);
+                } else {
+                    commandItems.put(command, displayLoreName);
+                }
             }
         }
-
-        System.out.println(commandItems);
     }
 
     public boolean isCommandItem(ItemStack itemStack) {
@@ -115,6 +124,11 @@ public class CommandItems {
             if (displayLoreMap.containsKey(displayName)) {
                 String formattedCommand = command.replace("{player}", player.getName());
                 player.performCommand(formattedCommand);
+                String redeemMessage = spawnerConfig.getRedeemMessageFromDisplayName(displayName);
+
+                if (redeemMessage != null && !redeemMessage.isEmpty()) {
+                    player.sendMessage(redeemMessage);
+                }
                 if (itemStack.getAmount() > 1) {
                     itemStack.setAmount(itemStack.getAmount() - 1);
                 } else {

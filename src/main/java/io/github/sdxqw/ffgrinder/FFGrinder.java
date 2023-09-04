@@ -12,7 +12,7 @@ public class FFGrinder extends JavaPlugin {
         saveDefaultConfig();
         reloadConfig();
         SpawnerConfig spawnerConfig = new SpawnerConfig(getConfig());
-        CommandItems commandItems = new CommandItems(this);
+        CommandItems commandItems = new CommandItems(this, spawnerConfig);
         commandItems.loadCommand();
         getServer().getPluginManager().registerEvents(new SpawnerListener(commandItems, spawnerConfig), this);
     }

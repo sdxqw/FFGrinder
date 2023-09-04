@@ -35,33 +35,38 @@ public class SpawnerListener implements Listener {
             List<String> allowedWorlds = spawnerConfig.getAllowedWorlds(entityTypeName);
             if (allowedWorlds != null && allowedWorlds.contains(event.getEntity().getWorld().getName())) {
                 List<Map<?, ?>> itemsWithChances = spawnerConfig.getItemsWithChances(entityTypeName);
-                for (Map<?, ?> itemMap : itemsWithChances) {
-                    ItemStack itemStack = ItemDrops.getRandomItem(itemMap);
-                    if (itemStack != null) {
-                        List<Map<?, ?>> enchantments = new ArrayList<>();
-                        Object enchantmentsObj = itemMap.get("enchantments");
+                if (itemsWithChances != null) {
+                    for (Map<?, ?> itemMap : itemsWithChances) {
+                        ItemStack itemStack = ItemDrops.getRandomItem(itemMap);
+                        if (itemStack != null) {
+                            List<Map<?, ?>> enchantments = new ArrayList<>();
+                            Object enchantmentsObj = itemMap.get("enchantments");
 
-                        if (enchantmentsObj instanceof List<?>) {
-                            for (Object obj : (List<?>) enchantmentsObj) {
-                                if (obj instanceof Map<?, ?>) {
-                                    enchantments.add((Map<?, ?>) obj);
+                            if (enchantmentsObj instanceof List<?>) {
+                                for (Object obj : (List<?>) enchantmentsObj) {
+                                    if (obj instanceof Map<?, ?>) {
+                                        enchantments.add((Map<?, ?>) obj);
+                                    }
                                 }
                             }
-                        }
 
-                        if (!enchantments.isEmpty()) {
-                            ItemDrops.applyEnchantments(itemStack, enchantments);
-                        }
+                            if (!enchantments.isEmpty()) {
+                                ItemDrops.applyEnchantments(itemStack, enchantments);
+                            }
 
-                        eligibleItems.add(itemStack);
+                            eligibleItems.add(itemStack);
+                        }
                     }
                 }
 
                 List<Map<?, ?>> commandItemsWithChances = spawnerConfig.getCommandItemsWithChances(entityTypeName);
-                for (Map<?, ?> commandItemMap : commandItemsWithChances) {
-                    ItemStack commandItemStack = ItemDrops.getRandomItem(commandItemMap);
-                    if (commandItemStack != null) {
-                        eligibleItems.add(commandItemStack);
+
+                if (commandItemsWithChances != null) {
+                    for (Map<?, ?> commandItemMap : commandItemsWithChances) {
+                        ItemStack commandItemStack = ItemDrops.getRandomItem(commandItemMap);
+                        if (commandItemStack != null) {
+                            eligibleItems.add(commandItemStack);
+                        }
                     }
                 }
 
@@ -79,7 +84,6 @@ public class SpawnerListener implements Listener {
         ItemStack itemStack = event.getItem();
 
         if (commandItems.isCommandItem(itemStack)) {
-            System.out.println("Command item found.");
             commandItems.executeCommand(event.getPlayer(), itemStack);
         }
     }
