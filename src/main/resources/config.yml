@@ -1,0 +1,30 @@
+ZOMBIE:
+  allowedWorlds:
+    - world
+  itemsWithChances:
+    - amount: 1
+      chance: 80.0
+      displayName: '&0&l[&a&lAr&f&lct&a&lic&0&l] &f&lHelmet'
+      enchantments:
+        - level: 3
+          enchant: PROTECTION_ENVIRONMENTAL
+        - level: 3
+          enchant: DURABILITY
+      displayMaterial: DIAMOND_HELMET
+    - amount: 1
+      chance: 50.0
+      displayName: '&0&l[&a&lAr&f&lct&a&lic&0&l] &f&lHelmet'
+      enchantments:
+        - level: 3
+          enchant: PROTECTION_ENVIRONMENTAL
+        - level: 3
+          enchant: DURABILITY
+      displayMaterial: DIAMOND_CHESTPLATE
+  commandWithChances:
+    - amount: 1
+      chance: 90.0
+      displayName: "&eCOMMAND"
+      displayLore:
+        - "&6Test"
+      command: "say {player} hello"
+      displayMaterial: DIAMOND

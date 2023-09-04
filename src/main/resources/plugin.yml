@@ -1,0 +1,4 @@
+name: FFGrinder
+version: '${version}'
+main: io.github.sdxqw.ffgrinder.FFGrinder
+api-version: '1.8.8'
