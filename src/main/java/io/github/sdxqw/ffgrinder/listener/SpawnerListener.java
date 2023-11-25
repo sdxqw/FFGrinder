@@ -19,7 +19,6 @@ public class SpawnerListener implements Listener {
 
     private final SpawnerConfig spawnerConfig;
     private final CommandItems commandItems;
-
     private final List<ItemStack> eligibleItems = new ArrayList<>();
 
     public SpawnerListener(CommandItems commandItems, SpawnerConfig spawnerConfig) {
@@ -34,47 +33,64 @@ public class SpawnerListener implements Listener {
         if (spawnerConfig.isEntityTypeConfigured(entityTypeName)) {
             List<String> allowedWorlds = spawnerConfig.getAllowedWorlds(entityTypeName);
             if (allowedWorlds != null && allowedWorlds.contains(event.getEntity().getWorld().getName())) {
-                List<Map<?, ?>> itemsWithChances = spawnerConfig.getItemsWithChances(entityTypeName);
-                if (itemsWithChances != null) {
-                    for (Map<?, ?> itemMap : itemsWithChances) {
-                        ItemStack itemStack = ItemDrops.getRandomItem(itemMap);
-                        if (itemStack != null) {
-                            List<Map<?, ?>> enchantments = new ArrayList<>();
-                            Object enchantmentsObj = itemMap.get("enchantments");
+                processItemsWithChances(entityTypeName);
+                processCommandItemsWithChances(entityTypeName);
+                dropSelectedItem(entityTypeName, event);
+            }
+        }
+    }
 
-                            if (enchantmentsObj instanceof List<?>) {
-                                for (Object obj : (List<?>) enchantmentsObj) {
-                                    if (obj instanceof Map<?, ?>) {
-                                        enchantments.add((Map<?, ?>) obj);
-                                    }
-                                }
-                            }
-
-                            if (!enchantments.isEmpty()) {
-                                ItemDrops.applyEnchantments(itemStack, enchantments);
-                            }
-
-                            eligibleItems.add(itemStack);
-                        }
-                    }
+    private void processItemsWithChances(String entityTypeName) {
+        List<Map<?, ?>> itemsWithChances = spawnerConfig.getItemsWithChances(entityTypeName);
+        if (itemsWithChances != null) {
+            for (Map<?, ?> itemMap : itemsWithChances) {
+                ItemStack itemStack = ItemDrops.getRandomItem(itemMap);
+                if (itemStack != null) {
+                    applyEnchantmentsIfAny(itemMap, itemStack);
+                    eligibleItems.add(itemStack);
                 }
+            }
+        }
+    }
 
-                List<Map<?, ?>> commandItemsWithChances = spawnerConfig.getCommandItemsWithChances(entityTypeName);
+    private void applyEnchantmentsIfAny(Map<?, ?> itemMap, ItemStack itemStack) {
+        List<Map<?, ?>> enchantments = new ArrayList<>();
+        Object enchantmentsObj = itemMap.get("enchantments");
 
-                if (commandItemsWithChances != null) {
-                    for (Map<?, ?> commandItemMap : commandItemsWithChances) {
-                        ItemStack commandItemStack = ItemDrops.getRandomItem(commandItemMap);
-                        if (commandItemStack != null) {
-                            eligibleItems.add(commandItemStack);
-                        }
-                    }
+        if (enchantmentsObj instanceof List<?>) {
+            for (Object obj : (List<?>) enchantmentsObj) {
+                if (obj instanceof Map<?, ?>) {
+                    enchantments.add((Map<?, ?>) obj);
                 }
+            }
+        }
 
-                if (!eligibleItems.isEmpty()) {
-                    ItemStack selectedItem = eligibleItems.get(new Random().nextInt(eligibleItems.size()));
-                    event.getDrops().clear();
-                    event.getDrops().add(selectedItem);
+        if (!enchantments.isEmpty()) {
+            ItemDrops.applyEnchantments(itemStack, enchantments);
+        }
+    }
+
+    private void processCommandItemsWithChances(String entityTypeName) {
+        List<Map<?, ?>> commandItemsWithChances = spawnerConfig.getCommandItemsWithChances(entityTypeName);
+
+        if (commandItemsWithChances != null) {
+            for (Map<?, ?> commandItemMap : commandItemsWithChances) {
+                ItemStack commandItemStack = ItemDrops.getRandomItem(commandItemMap);
+                if (commandItemStack != null) {
+                    eligibleItems.add(commandItemStack);
                 }
+            }
+        }
+    }
+
+    private void dropSelectedItem(String entityTypeName, EntityDeathEvent event) {
+        if (!eligibleItems.isEmpty()) {
+            ItemStack selectedItem = eligibleItems.get(new Random().nextInt(eligibleItems.size()));
+            if (spawnerConfig.isDefaultDrop(entityTypeName)) {
+                event.getDrops().add(selectedItem);
+            } else {
+                event.getDrops().clear();
+                event.getDrops().add(selectedItem);
             }
         }
     }

@@ -1,12 +1,23 @@
-ZOMBIE:
-  allowedWorlds:
+ZOMBIE: #the mob name to modify
+  defaultDrop: true # Indicates whether the default mob drop is enabled or not for Zombies.
+  allowedWorlds: # Specifies the worlds where custom loot settings for Zombies are permitted.
     - world
-  commandWithChances:
+  commandWithChances: # Items that trigger a command when interacted with by players.
     - amount: 1
-      chance: 90.0
-      displayName: "&0[&e&lTokens&0] &eVoucher"
+      chance: 90.0 # The probability (in percentage) for this item to trigger the command.
+      displayName: "&0[&e&lTokens&0] &eVoucher" # The displayed name of the item.
       displayLore:
-        - "&f100 Tokens"
-      command: "tgive {player} 100"
-      redeemMessage: "&eYou have redeemed 100 tokens"
-      displayMaterial: PAPER
+        - "&f100 Tokens" # The lore/description of the item.
+      command: "tgive {player} 100" # The command executed upon interaction.
+      redeemMessage: "&eYou have redeemed 100 tokens" # The message sent to the player after redemption.
+      displayMaterial: PAPER # The material/icon representing this item.
+  itemWithChances: # Normal items with optional lore and enchantments.
+    - amount: 1
+      chance: 90.0 # The chance (in percentage) for this item to drop from Zombies.
+      displayName: "Sword" # The displayed name of the item.
+      displayLore:
+        - "Cool sword" # The lore/description of the item.
+      displayMaterial: DIAMOND_SWORD # The material/icon representing this item.
+      enchantments:
+        - level: 5
+          enchant: DAMAGE_ALL # The enchantment and its level applied to the item.

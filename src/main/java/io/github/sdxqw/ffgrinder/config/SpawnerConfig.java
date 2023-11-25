@@ -67,5 +67,15 @@ public class SpawnerConfig {
         return null;
     }
 
+    public boolean isDefaultDrop(String entityTypeName) {
+        ConfigurationSection section = config.getConfigurationSection(entityTypeName);
+
+        if (section != null && section.contains("defaultDrop")) {
+            return section.getBoolean("defaultDrop");
+        }
+
+        return false;
+    }
+
 
 }
