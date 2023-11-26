@@ -66,7 +66,12 @@ public class ItemDrops {
     public static void applyEnchantments(ItemStack itemStack, List<Map<?, ?>> enchantments) {
         for (Map<?, ?> enchantmentMap : enchantments) {
             try {
-                NamespacedKey enchantmentKey = NamespacedKey.minecraft(enchantmentMap.get("enchant").toString().toLowerCase());
+                Object enchantObj = enchantmentMap.get("enchant");
+                if (enchantObj == null) {
+                    System.out.println("Enchantment is null");
+                    continue;
+                }
+                NamespacedKey enchantmentKey = NamespacedKey.minecraft(enchantObj.toString().toLowerCase());
                 Enchantment enchantment = Enchantment.getByKey(enchantmentKey);
                 int enchantmentLevel = (Integer) enchantmentMap.get("level");
                 itemStack.addUnsafeEnchantment(Objects.requireNonNull(enchantment), enchantmentLevel);

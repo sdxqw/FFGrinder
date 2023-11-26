@@ -134,7 +134,6 @@ public class SpawnerConfig {
                 .flatMap(itemMap -> ((List<?>) itemMap.get("enchantments")).stream())
                 .filter(enchantment -> enchantment instanceof Map)
                 .map(enchantment -> (Map<?, ?>) enchantment)
-                .filter(enchantmentMap -> enchantmentMap.get("level") instanceof Integer && enchantmentMap.get("enchantment") instanceof String)
                 .collect(Collectors.toList());
     }
 }
