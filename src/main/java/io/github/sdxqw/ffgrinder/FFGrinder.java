@@ -1,19 +1,21 @@
 package io.github.sdxqw.ffgrinder;
 
-import io.github.sdxqw.ffgrinder.command.CommandItems;
 import io.github.sdxqw.ffgrinder.config.SpawnerConfig;
 import io.github.sdxqw.ffgrinder.listener.SpawnerListener;
+import lombok.Getter;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class FFGrinder extends JavaPlugin {
 
+    @Getter
+    private static FFGrinder instance;
+
     @Override
     public void onEnable() {
+        instance = this;
         saveDefaultConfig();
         reloadConfig();
         SpawnerConfig spawnerConfig = new SpawnerConfig(getConfig());
-        CommandItems commandItems = new CommandItems(this, spawnerConfig);
-        commandItems.loadCommand();
-        getServer().getPluginManager().registerEvents(new SpawnerListener(commandItems, spawnerConfig), this);
+        getServer().getPluginManager().registerEvents(new SpawnerListener(spawnerConfig), this);
     }
 }

@@ -9,6 +9,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -64,11 +65,14 @@ public class ItemDrops {
      */
     public static void applyEnchantments(ItemStack itemStack, List<Map<?, ?>> enchantments) {
         for (Map<?, ?> enchantmentMap : enchantments) {
-            String enchantmentName = (String) enchantmentMap.get("enchant");
-            Enchantment enchantment = Enchantment.getByKey(NamespacedKey.fromString(enchantmentName));
-            int enchantmentLevel = (Integer) enchantmentMap.get("level");
-            assert enchantment != null;
-            itemStack.addUnsafeEnchantment(enchantment, enchantmentLevel);
+            try {
+                NamespacedKey enchantmentKey = NamespacedKey.minecraft(enchantmentMap.get("enchant").toString().toLowerCase());
+                Enchantment enchantment = Enchantment.getByKey(enchantmentKey);
+                int enchantmentLevel = (Integer) enchantmentMap.get("level");
+                itemStack.addUnsafeEnchantment(Objects.requireNonNull(enchantment), enchantmentLevel);
+            } catch (IllegalArgumentException e) {
+                System.out.println("Invalid enchantment: " + enchantmentMap.get("enchant"));
+            }
         }
     }
 }

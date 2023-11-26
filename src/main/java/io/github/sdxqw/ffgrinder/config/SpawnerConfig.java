@@ -1,15 +1,18 @@
 package io.github.sdxqw.ffgrinder.config;
 
+import lombok.Getter;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * This class is used to manage the configuration of spawners.
  */
+@Getter
 public class SpawnerConfig {
     private final FileConfiguration config;
 
@@ -20,6 +23,7 @@ public class SpawnerConfig {
     public SpawnerConfig(FileConfiguration config) {
         this.config = config;
     }
+
 
     /**
      * Checks if a specific entity type is configured.
@@ -112,5 +116,25 @@ public class SpawnerConfig {
         }
 
         return false;
+    }
+
+    /**
+     * Retrieves the list of enchantments for a specific entity type.
+     * @param entityTypeName The name of the entity type.
+     * @return A list of maps containing enchantments, or null if not configured.
+     */
+    public List<Map<?, ?>> getEnchants(String entityTypeName) {
+        ConfigurationSection section = config.getConfigurationSection(entityTypeName);
+        if (section == null || !section.contains("itemsWithChances")) {
+            return null;
+        }
+
+        return section.getMapList("itemsWithChances").stream()
+                .filter(itemMap -> itemMap.get("enchantments") instanceof List)
+                .flatMap(itemMap -> ((List<?>) itemMap.get("enchantments")).stream())
+                .filter(enchantment -> enchantment instanceof Map)
+                .map(enchantment -> (Map<?, ?>) enchantment)
+                .filter(enchantmentMap -> enchantmentMap.get("level") instanceof Integer && enchantmentMap.get("enchantment") instanceof String)
+                .collect(Collectors.toList());
     }
 }

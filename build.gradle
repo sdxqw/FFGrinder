@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'com.github.johnrengelman.shadow' version '7.0.0'
 }
 
 group = 'io.github.sdxqw'
@@ -16,19 +17,23 @@ repositories {
     maven {
         url("https://jitpack.io")
     }
+    maven {
+        url("https://repo.codemc.org/repository/maven-public/")
+    }
 }
 
 dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.28'
     annotationProcessor 'org.projectlombok:lombok:1.18.28'
     compileOnly 'org.spigotmc:spigot-api:1.20.2-R0.1-SNAPSHOT'
+    shadow 'de.tr7zw:item-nbt-api:2.12.1'
 }
 
 def targetJavaVersion = 8
 java {
     def javaVersion = JavaVersion.toVersion(targetJavaVersion)
-    sourceCompatibility = javaVersion
-    targetCompatibility = javaVersion
+    sourceCompatibility = 1.9
+    targetCompatibility = 1.9
     if (JavaVersion.current() < javaVersion) {
         toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
     }
@@ -41,4 +46,9 @@ processResources {
     filesMatching('plugin.yml') {
         expand props
     }
+}
+
+shadowJar {
+    configurations = [project.configurations.shadow]
+    relocate 'de.tr7zw.changeme', 'io.github.sdxqw'
 }
