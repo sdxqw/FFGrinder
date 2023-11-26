@@ -14,4 +14,5 @@ Dive into a world where loot drops are just the way you want them.
 
 # :rocket: Showcase
 
-![image](https://github.com/sdxqw/FFGrinder/assets/94248011/c6fcc93f-511a-4ba2-8b47-14758200a9e5)
+![Uploading image.png…]()
+
