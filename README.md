@@ -16,4 +16,4 @@ Dive into a world where loot drops are just the way you want them.
 
 ![image](https://github.com/sdxqw/FFGrinder/assets/94248011/74232dde-261e-4e74-acde-a975e5c4f117)
 
-![image](https://i.imgur.com/wPBAwyv.mp4)
+![video](https://i.imgur.com/wPBAwyv.mp4)
