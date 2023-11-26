@@ -7,17 +7,34 @@ import org.bukkit.configuration.file.FileConfiguration;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This class is used to manage the configuration of spawners.
+ */
 public class SpawnerConfig {
     private final FileConfiguration config;
 
+    /**
+     * Constructor for SpawnerConfig.
+     * @param config The configuration file to be managed.
+     */
     public SpawnerConfig(FileConfiguration config) {
         this.config = config;
     }
 
+    /**
+     * Checks if a specific entity type is configured.
+     * @param entityTypeName The name of the entity type.
+     * @return True if the entity type is configured, false otherwise.
+     */
     public boolean isEntityTypeConfigured(String entityTypeName) {
         return config.contains(entityTypeName);
     }
 
+    /**
+     * Retrieves the list of allowed worlds for a specific entity type.
+     * @param entityTypeName The name of the entity type.
+     * @return A list of allowed worlds, or null if not configured.
+     */
     public List<String> getAllowedWorlds(String entityTypeName) {
         ConfigurationSection section = config.getConfigurationSection(entityTypeName);
         if (section != null && section.contains("allowedWorlds")) {
@@ -26,6 +43,11 @@ public class SpawnerConfig {
         return null;
     }
 
+    /**
+     * Retrieves the list of items with their respective chances for a specific entity type.
+     * @param entityTypeName The name of the entity type.
+     * @return A list of maps containing items and their chances, or null if not configured.
+     */
     public List<Map<?, ?>> getItemsWithChances(String entityTypeName) {
         ConfigurationSection section = config.getConfigurationSection(entityTypeName);
         if (section != null && section.contains("itemsWithChances")) {
@@ -34,6 +56,11 @@ public class SpawnerConfig {
         return null;
     }
 
+    /**
+     * Retrieves the list of command items with their respective chances for a specific entity type.
+     * @param entityTypeName The name of the entity type.
+     * @return A list of maps containing command items and their chances, or null if not configured.
+     */
     public List<Map<?, ?>> getCommandItemsWithChances(String entityTypeName) {
         ConfigurationSection section = config.getConfigurationSection(entityTypeName);
         if (section != null && section.contains("commandWithChances")) {
@@ -42,6 +69,11 @@ public class SpawnerConfig {
         return null;
     }
 
+    /**
+     * Retrieves the redeem message for a specific display name.
+     * @param displayName The display name.
+     * @return The redeem message, or null if not found.
+     */
     public String getRedeemMessageFromDisplayName(String displayName) {
         ConfigurationSection configurationSection = config;
 
@@ -67,6 +99,11 @@ public class SpawnerConfig {
         return null;
     }
 
+    /**
+     * Checks if a specific entity type is set as a default drop.
+     * @param entityTypeName The name of the entity type.
+     * @return True if the entity type is a default drop, false otherwise.
+     */
     public boolean isDefaultDrop(String entityTypeName) {
         ConfigurationSection section = config.getConfigurationSection(entityTypeName);
 
@@ -76,6 +113,4 @@ public class SpawnerConfig {
 
         return false;
     }
-
-
 }

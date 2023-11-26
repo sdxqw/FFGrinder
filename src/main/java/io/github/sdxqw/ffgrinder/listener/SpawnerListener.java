@@ -15,17 +15,29 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+/**
+ * This class listens to and handles events related to spawners.
+ */
 public class SpawnerListener implements Listener {
 
     private final SpawnerConfig spawnerConfig;
     private final CommandItems commandItems;
     private final List<ItemStack> eligibleItems = new ArrayList<>();
 
+    /**
+     * Constructor for SpawnerListener.
+     * @param commandItems The command items to be managed.
+     * @param spawnerConfig The configuration of spawners to be managed.
+     */
     public SpawnerListener(CommandItems commandItems, SpawnerConfig spawnerConfig) {
         this.spawnerConfig = spawnerConfig;
         this.commandItems = commandItems;
     }
 
+    /**
+     * Event handler for entity death events.
+     * @param event The entity death event.
+     */
     @EventHandler(priority = EventPriority.HIGH)
     public void onEntityDeath(EntityDeathEvent event) {
         String entityTypeName = event.getEntity().getType().name();
@@ -40,6 +52,10 @@ public class SpawnerListener implements Listener {
         }
     }
 
+    /**
+     * Processes items with chances for a specific entity type.
+     * @param entityTypeName The name of the entity type.
+     */
     private void processItemsWithChances(String entityTypeName) {
         List<Map<?, ?>> itemsWithChances = spawnerConfig.getItemsWithChances(entityTypeName);
         if (itemsWithChances != null) {
@@ -53,6 +69,11 @@ public class SpawnerListener implements Listener {
         }
     }
 
+    /**
+     * Applies enchantments to an item stack if any are present in the item map.
+     * @param itemMap The map containing item details.
+     * @param itemStack The item stack to apply enchantments to.
+     */
     private void applyEnchantmentsIfAny(Map<?, ?> itemMap, ItemStack itemStack) {
         List<Map<?, ?>> enchantments = new ArrayList<>();
         Object enchantmentsObj = itemMap.get("enchantments");
@@ -70,6 +91,10 @@ public class SpawnerListener implements Listener {
         }
     }
 
+    /**
+     * Processes command items with chances for a specific entity type.
+     * @param entityTypeName The name of the entity type.
+     */
     private void processCommandItemsWithChances(String entityTypeName) {
         List<Map<?, ?>> commandItemsWithChances = spawnerConfig.getCommandItemsWithChances(entityTypeName);
 
@@ -83,6 +108,11 @@ public class SpawnerListener implements Listener {
         }
     }
 
+    /**
+     * Drops a selected item when an entity dies.
+     * @param entityTypeName The name of the entity type.
+     * @param event The entity death event.
+     */
     private void dropSelectedItem(String entityTypeName, EntityDeathEvent event) {
         if (!eligibleItems.isEmpty()) {
             ItemStack selectedItem = eligibleItems.get(new Random().nextInt(eligibleItems.size()));
@@ -95,6 +125,10 @@ public class SpawnerListener implements Listener {
         }
     }
 
+    /**
+     * Event handler for player interaction events.
+     * @param event The player interaction event.
+     */
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerInteract(PlayerInteractEvent event) {
         ItemStack itemStack = event.getItem();
