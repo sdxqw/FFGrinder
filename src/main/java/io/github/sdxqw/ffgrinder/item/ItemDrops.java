@@ -2,6 +2,7 @@ package io.github.sdxqw.ffgrinder.item;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -22,8 +23,10 @@ public class ItemDrops {
      */
     public static ItemStack createItemStack(Map<?, ?> itemMap) {
         Material displayMaterial = Material.getMaterial((String) itemMap.get("displayMaterial"));
+        assert displayMaterial != null;
         ItemStack itemStack = new ItemStack(displayMaterial, (Integer) itemMap.get("amount"));
         ItemMeta itemMeta = itemStack.getItemMeta();
+        assert itemMeta != null;
         itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', (String) itemMap.get("displayName")));
         itemMeta.setLore(getLore(itemMap));
         itemStack.setItemMeta(itemMeta);
@@ -62,8 +65,9 @@ public class ItemDrops {
     public static void applyEnchantments(ItemStack itemStack, List<Map<?, ?>> enchantments) {
         for (Map<?, ?> enchantmentMap : enchantments) {
             String enchantmentName = (String) enchantmentMap.get("enchant");
-            Enchantment enchantment = Enchantment.getByName(enchantmentName);
+            Enchantment enchantment = Enchantment.getByKey(NamespacedKey.fromString(enchantmentName));
             int enchantmentLevel = (Integer) enchantmentMap.get("level");
+            assert enchantment != null;
             itemStack.addUnsafeEnchantment(enchantment, enchantmentLevel);
         }
     }
